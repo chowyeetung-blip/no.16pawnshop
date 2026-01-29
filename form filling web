@@ -1,0 +1,302 @@
+import React, { useState } from 'react';
+import { Heart, Package, Weight, MessageSquare, Send, CheckCircle2, Check, ExternalLink, Info, BookOpen, Calendar, MapPin, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const PawnShopWebsite = () => {
+  const [currentPage, setCurrentPage] = useState('form'); // 'form' or 'campaign'
+  const [submitted, setSubmitted] = useState(false);
+  const [isAgreed, setIsAgreed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    emotion: '',
+    nickname: '',
+    weight: '',
+    story: ''
+  });
+
+  const FORM_ENDPOINT = "https://formspree.io/f/mqebpqqo"; 
+  const INSTAGRAM_URL = "https://www.instagram.com/wee.works?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==";
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          agreement_status: isAgreed ? "同意分享" : "僅供典當",
+          submitted_at: new Date().toLocaleString()
+        })
+      });
+      if (response.ok) setSubmitted(true);
+      else setSubmitted(true);
+    } catch (error) {
+      setSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // --- 頁面組件：典當表單 ---
+  const FormPage = () => (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="bg-white p-8 md:p-12 shadow-sm border border-[#d4cfc3] relative"
+    >
+      <div className="mb-10 border-l-4 border-[#8b2b2b] pl-4">
+        <h2 className="text-xl font-bold">情緒投稿單</h2>
+        <p className="text-sm text-[#8b6b6b] mt-1">請如實填寫，讓情感得以安放</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="space-y-2">
+          <label className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-[#6b6b6b]">
+            <Heart size={16} className="text-[#8b2b2b]" /> 今天我想典當的情緒是
+          </label>
+          <input required type="text" name="emotion" value={formData.emotion} placeholder="例如：遺憾、焦慮、小確幸..." className="w-full border-b-2 border-[#eee] focus:border-[#8b2b2b] outline-none py-2 transition-colors bg-transparent" onChange={handleChange} />
+        </div>
+
+        <div className="space-y-2">
+          <label className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-[#6b6b6b]">
+            <Package size={16} className="text-[#8b2b2b]" /> 它的綽號（給它一個暱稱）
+          </label>
+          <input required type="text" name="nickname" value={formData.nickname} placeholder="為這份情緒命名..." className="w-full border-b-2 border-[#eee] focus:border-[#8b2b2b] outline-none py-2 transition-colors bg-transparent" onChange={handleChange} />
+        </div>
+
+        <div className="space-y-2">
+          <label className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-[#6b6b6b]">
+            <Weight size={16} className="text-[#8b2b2b]" /> 重量
+          </label>
+          <input required type="text" name="weight" value={formData.weight} placeholder="克數 或「輕／中／重」" className="w-full border-b-2 border-[#eee] focus:border-[#8b2b2b] outline-none py-2 transition-colors bg-transparent" onChange={handleChange} />
+        </div>
+
+        <div className="space-y-2">
+          <label className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-[#6b6b6b]">
+            <MessageSquare size={16} className="text-[#8b2b2b]" /> 故事內容
+          </label>
+          <textarea required name="story" value={formData.story} rows={5} placeholder="如果它會說話，它會對我說......" className="w-full border border-[#eee] focus:border-[#8b2b2b] outline-none p-4 transition-colors bg-[#fafafa] resize-none" onChange={handleChange}></textarea>
+        </div>
+
+        <div className="space-y-3 pt-4">
+          <div className="flex items-start gap-4 cursor-pointer group" onClick={() => setIsAgreed(!isAgreed)}>
+            <div className={`mt-1 min-w-[24px] h-6 border-2 flex items-center justify-center transition-all duration-200 ${isAgreed ? 'border-[#8b2b2b] bg-[#8b2b2b]' : 'border-[#ccc]'}`}>
+              {isAgreed && <Check size={18} className="text-white" />}
+            </div>
+            <div className="flex flex-col">
+              <span className={`text-sm font-bold uppercase tracking-wider transition-colors ${isAgreed ? 'text-[#3d3d3d]' : 'text-[#6b6b6b]'}`}>
+                我願意分享我的情感觸跡（勾選）
+              </span>
+              <p className="text-[10px] text-[#aaa] leading-relaxed mt-2 max-w-md">
+                即使你選擇分享故事，我們也僅在你授權的範圍內呈現內容；姓名、聯絡方式與任何可辨識你個人的資訊均不公開。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-6">
+          <button type="submit" disabled={isSubmitting} className={`w-full bg-white text-black border-2 border-black py-4 px-6 flex items-center justify-center gap-3 hover:bg-black hover:text-white transition-all duration-300 group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}>
+            <span className="font-bold tracking-[0.2em] text-lg">{isSubmitting ? '處理中...' : '提交典當申請 投稿'}</span>
+            {!isSubmitting && <Send size={20} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />}
+          </button>
+        </div>
+      </form>
+    </motion.div>
+  );
+
+  // --- 頁面組件：徵件計畫 ---
+  const CampaignPage = () => (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="space-y-12"
+    >
+      <section className="bg-white p-8 md:p-12 shadow-sm border border-[#d4cfc3]">
+        <div className="mb-8 border-l-4 border-[#8b2b2b] pl-4">
+          <h2 className="text-2xl font-bold tracking-widest">線上徵件計畫：情感的物證</h2>
+          <p className="text-sm text-[#8b6b6b] mt-1">Collecting Emotional Evidence</p>
+        </div>
+        
+        <div className="prose prose-sm text-[#6b6b6b] leading-relaxed space-y-6">
+          <p className="text-lg italic text-[#3d3d3d]">「每一件被典當的情緒，都是一段生命的證詞。」</p>
+          <p>
+            《十六號當舖》不僅是一個收集故事的容器，更是一場關於「情感轉化」的社會實驗。我們正在為即將到來的<strong>情感物證展覽</strong>進行線上徵件。
+          </p>
+          <div className="bg-[#fafafa] p-6 border-l-2 border-[#eee]">
+            <h4 className="font-bold text-[#3d3d3d] mb-2 flex items-center gap-2">
+              <BookOpen size={18} className="text-[#8b2b2b]" /> 徵件目標
+            </h4>
+            <p>我們尋找那些無法被輕易言說、卻沉重如山的瞬間。透過文字、物件描述與情緒重量的量化，我們誠邀你提供一樣和你重要情感緊緊相連的物品，在未來的活動中展出。</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="grid md:grid-cols-2 gap-6">
+        <div className="bg-white p-8 border border-[#d4cfc3]">
+          <h3 className="font-bold mb-4 flex items-center gap-2">
+            <Info size={18} className="text-[#8b2b2b]" /> 參與方式
+          </h3>
+          <ul className="text-sm text-[#6b6b6b] space-y-4 mb-8">
+            <li className="flex gap-3">
+              <span className="font-bold text-[#8b2b2b]">01</span>
+              <span>進入「典當申請」頁面填寫您的情緒故事。</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="font-bold text-[#8b2b2b]">02</span>
+              <span>勾選「願意分享我的情感觸跡」。</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="font-bold text-[#8b2b2b]">03</span>
+              <span>您的故事將進入審核池，有機會成為展覽的一部分。</span>
+            </li>
+          </ul>
+
+          <div className="pt-6 border-t border-[#eee]">
+            <h4 className="font-bold text-sm mb-3 text-[#3d3d3d]">活動詳情：</h4>
+            <div className="space-y-2 text-sm text-[#6b6b6b]">
+              <p className="flex items-center gap-2"><Calendar size={14} className="text-[#8b2b2b]" /> 日期：5/3/2026</p>
+              <p className="flex items-center gap-2"><MapPin size={14} className="text-[#8b2b2b]" /> 地點：VTC</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-[#3d3d3d] p-8 text-white flex flex-col justify-between">
+          <div>
+            <h3 className="font-bold mb-4">展覽預告</h3>
+            <p className="text-sm text-gray-300 leading-relaxed">
+              實體展覽將於 2026 年 3 月展開，屆時將展出由投稿故事轉化而成的「情感標本」。
+            </p>
+          </div>
+          <button 
+            onClick={() => setCurrentPage('form')}
+            className="mt-6 w-full py-3 bg-white text-black font-bold text-sm hover:bg-[#F0E68C] transition-colors"
+          >
+            立即前往投稿
+          </button>
+        </div>
+      </section>
+    </motion.div>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#F0E68C] text-[#3d3d3d] font-serif selection:bg-[#8b2b2b] selection:text-white">
+      {/* 網頁選單 Navigation */}
+      <nav className="sticky top-0 z-50 bg-white border-b border-[#d4cfc3] px-6 py-4">
+        <div className="max-w-2xl mx-auto flex justify-between items-center">
+          <div className="font-bold text-[#8b2b2b] tracking-tighter text-xl">16.</div>
+          <div className="flex gap-8">
+            <button 
+              onClick={() => {setCurrentPage('form'); setSubmitted(false);}}
+              className={`text-xs font-bold tracking-widest uppercase pb-1 transition-all ${currentPage === 'form' ? 'border-b-2 border-[#8b2b2b] text-[#8b2b2b]' : 'text-[#999] hover:text-[#3d3d3d]'}`}
+            >
+              典當申請
+            </button>
+            <button 
+              onClick={() => {setCurrentPage('campaign'); setSubmitted(false);}}
+              className={`text-xs font-bold tracking-widest uppercase pb-1 transition-all ${currentPage === 'campaign' ? 'border-b-2 border-[#8b2b2b] text-[#8b2b2b]' : 'text-[#999] hover:text-[#3d3d3d]'}`}
+            >
+              線上徵件計畫
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <header className="relative py-16 px-6 border-b border-[#d4cfc3] bg-white overflow-hidden">
+        <div className="max-w-2xl mx-auto text-center relative z-10">
+          <motion.div 
+            key={currentPage}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="inline-block border-2 border-[#8b2b2b] p-1 mb-6"
+          >
+            <div className="border border-[#8b2b2b] px-6 py-2">
+              <h1 className="text-4xl font-bold tracking-widest text-[#8b2b2b]">
+                {currentPage === 'form' ? '十六號當舖' : '徵件計畫'}
+              </h1>
+            </div>
+          </motion.div>
+          <p className="text-lg text-[#6b6b6b] italic">
+            {currentPage === 'form' ? '「你的經歷，可能成為另一個個人療癒的起點。」' : '「收集情感的碎片，拼湊生命的完整。」'}
+          </p>
+        </div>
+      </header>
+
+      <main className="max-w-2xl mx-auto py-12 px-6">
+        <AnimatePresence mode="wait">
+          {submitted ? (
+            <motion.div key="success" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="max-w-md mx-auto bg-white p-10 rounded-sm shadow-xl border border-[#d4cfc3] text-center">
+              <div className="flex justify-center mb-6"><div className="w-20 h-20 rounded-full bg-[#8b2b2b] flex items-center justify-center"><CheckCircle2 className="text-white w-10 h-10" /></div></div>
+              <h2 className="text-2xl font-bold mb-4">感謝您的分享</h2>
+              <p className="text-[#6b6b6b] leading-relaxed mb-8 text-sm">您的情緒已被妥善收錄於「十六號當舖」。<br />{isAgreed && "我們將在授權範圍內，讓這份力量傳遞給更多人。"}</p>
+              <div className="flex flex-col gap-3">
+                <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="w-full py-3 bg-[#3d3d3d] text-white hover:bg-[#1a1a1a] transition-colors duration-300 rounded-sm flex items-center justify-center gap-2">前往 Instagram 了解更多 <ExternalLink size={16} /></a>
+                <button onClick={() => { setSubmitted(false); setFormData({ emotion: '', nickname: '', weight: '', story: '' }); setIsAgreed(false); }} className="w-full py-3 border border-[#3d3d3d] text-[#3d3d3d] hover:bg-gray-50 transition-colors duration-300 rounded-sm">返回首頁</button>
+              </div>
+            </motion.div>
+          ) : (
+            currentPage === 'form' ? <FormPage key="form" /> : <CampaignPage key="campaign" />
+          )}
+        </AnimatePresence>
+
+        {/* 關於十六號當舖 Section - 始終顯示在底部 */}
+        {!submitted && (
+          <motion.section 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="mt-20 text-center space-y-6 border-t border-[#d4cfc3] pt-16"
+          >
+            <div className="inline-block h-px w-12 bg-[#8b2b2b] mb-2"></div>
+            <h3 className="text-xl font-bold tracking-widest">關於十六號當舖</h3>
+            <p className="text-[#6b6b6b] leading-relaxed max-w-lg mx-auto text-sm">
+              這是一個關於情感交換的空間。我們相信每一份情緒都有其重量，每一段往事都值得被溫柔對待。
+              你的投稿將有機會在我們的電台節目中被朗讀，讓聲音傳遞療癒的力量。
+            </p>
+            <div className="flex justify-center gap-6 pt-4">
+              <button 
+                onClick={() => setCurrentPage('campaign')}
+                className="text-xs border-b border-[#3d3d3d] pb-1 hover:text-[#8b2b2b] hover:border-[#8b2b2b] transition-colors flex items-center gap-1"
+              >
+                查看過往故事 <ChevronRight size={12} />
+              </button>
+              <a 
+                href={INSTAGRAM_URL} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-xs border-b border-[#3d3d3d] pb-1 hover:text-[#8b2b2b] hover:border-[#8b2b2b] transition-colors flex items-center gap-1"
+              >
+                追蹤 Instagram <ExternalLink size={12} />
+              </a>
+            </div>
+          </motion.section>
+        )}
+
+        <div className="mt-12 pt-8 border-t border-[#eee] flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-[#999] tracking-widest uppercase">
+          <div className="flex items-center gap-2">
+            <span>ONLINE EDITION</span>
+            <span className="w-1 h-1 bg-[#ccc] rounded-full"></span>
+            <span>EST. 2024-2026</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span>IG: @wee.works</span>
+            <div className="w-8 h-8 bg-[#3d3d3d] flex items-center justify-center text-white font-bold">當</div>
+          </div>
+        </div>
+      </main>
+
+      <footer className="py-12 text-center text-[#999] text-xs tracking-widest border-t border-[#d4cfc3] bg-white mt-20">
+        © 2024-2026 十六號當舖 | 小蓮大造 WEE.WORKS
+      </footer>
+    </div>
+  );
+};
+
+export default PawnShopWebsite;
