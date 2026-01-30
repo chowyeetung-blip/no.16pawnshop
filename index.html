@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>十六號當舖 | 情感典當與徵件計畫</title>
+    <!-- 引入 Tailwind CSS 確保美感 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Lucide 圖標 -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Serif TC', serif;
+            background-color: #F0E68C;
+        }
+        .custom-shadow {
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+        }
+        .custom-shadow:active {
+            box-shadow: none;
+            transform: translate(2px, 2px);
+        }
+        .page-transition {
+            transition: all 0.3s ease-in-out;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="text-[#3d3d3d] selection:bg-[#8b2b2b] selection:text-white">
+
+    <!-- 導覽列 -->
+    <nav class="sticky top-0 z-50 bg-white border-b border-[#d4cfc3] px-6 py-4">
+        <div class="max-w-2xl mx-auto flex justify-between items-center">
+            <div class="font-bold text-[#8b2b2b] tracking-tighter text-xl">16.</div>
+            <div class="flex gap-8">
+                <button onclick="showPage('form')" id="nav-form" class="text-xs font-bold tracking-widest uppercase pb-1 border-b-2 border-[#8b2b2b] text-[#8b2b2b]">
+                    典當申請
+                </button>
+                <button onclick="showPage('campaign')" id="nav-campaign" class="text-xs font-bold tracking-widest uppercase pb-1 text-[#999] hover:text-[#3d3d3d]">
+                    線上徵件計畫
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 頁首 -->
+    <header class="relative py-16 px-6 border-b border-[#d4cfc3] bg-white overflow-hidden">
+        <div class="max-w-2xl mx-auto text-center relative z-10">
+            <div class="inline-block border-2 border-[#8b2b2b] p-1 mb-6">
+                <div class="border border-[#8b2b2b] px-6 py-2">
+                    <h1 id="header-title" class="text-4xl font-bold tracking-widest text-[#8b2b2b]">十六號當舖</h1>
+                </div>
+            </div>
+            <p id="header-subtitle" class="text-lg text-[#6b6b6b] italic">「你的經歷，可能成為另一個個人療癒的起點。」</p>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto py-12 px-6">
+        
+        <!-- 頁面 1: 典當表單 -->
+        <div id="page-form" class="page-transition">
+            <div class="bg-white p-8 md:p-12 shadow-sm border border-[#d4cfc3] relative">
+                <div class="mb-10 border-l-4 border-[#8b2b2b] pl-4">
+                    <h2 class="text-xl font-bold">情緒投稿單</h2>
+                    <p class="text-sm text-[#8b6b6b] mt-1">請如實填寫，讓情感得以安放</p>
+                </div>
+
+                <form id="pawnForm" action="https://formspree.io/f/mqebpqqo" method="POST" class="space-y-8">
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-[#6b6b6b]">
+                            <i data-lucide="heart" class="w-4 h-4 text-[#8b2b2b]"></i> 今天我想典當的情緒是
+                        </label>
+                        <input required type="text" name="emotion" placeholder="例如：遺憾、焦慮、小確幸..." class="w-full border-b-2 border-[#eee] focus:border-[#8b2b2b] outline-none py-2 transition-colors bg-transparent">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-[#6b6b6b]">
+                            <i data-lucide="package" class="w-4 h-4 text-[#8b2b2b]"></i> 它的綽號（給它一個暱稱）
+                        </label>
+                        <input required type="text" name="nickname" placeholder="為這份情緒命名..." class="w-full border-b-2 border-[#eee] focus:border-[#8b2b2b] outline-none py-2 transition-colors bg-transparent">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-[#6b6b6b]">
+                            <i data-lucide="weight" class="w-4 h-4 text-[#8b2b2b]"></i> 重量
+                        </label>
+                        <input required type="text" name="weight" placeholder="克數 或「輕／中／重」" class="w-full border-b-2 border-[#eee] focus:border-[#8b2b2b] outline-none py-2 transition-colors bg-transparent">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-[#6b6b6b]">
+                            <i data-lucide="message-square" class="w-4 h-4 text-[#8b2b2b]"></i> 故事內容
+                        </label>
+                        <textarea required name="story" rows="5" placeholder="如果它會說話，它會對我說......" class="w-full border border-[#eee] focus:border-[#8b2b2b] outline-none p-4 transition-colors bg-[#fafafa] resize-none"></textarea>
+                    </div>
+
+                    <div class="space-y-3 pt-4">
+                        <label class="flex items-start gap-4 cursor-pointer group">
+                            <input type="checkbox" name="agreement" class="mt-1 w-5 h-5 accent-[#8b2b2b]">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold uppercase tracking-wider text-[#3d3d3d]">我願意分享我的情感觸跡（勾選）</span>
+                                <p class="text-[10px] text-[#aaa] leading-relaxed mt-2 max-w-md">
+                                    即使你選擇分享故事，我們也僅在你授權的範圍內呈現內容；姓名、聯絡方式與任何可辨識你個人的資訊均不公開。
+                                </p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="pt-6">
+                        <button type="submit" class="w-full bg-white text-black border-2 border-black py-4 px-6 flex items-center justify-center gap-3 hover:bg-black hover:text-white transition-all duration-300 group custom-shadow">
+                            <span class="font-bold tracking-[0.2em] text-lg">提交典當申請 投稿</span>
+                            <i data-lucide="send" class="w-5 h-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 頁面 2: 徵件計畫 -->
+        <div id="page-campaign" class="page-transition hidden">
+            <div class="space-y-12">
+                <section class="bg-white p-8 md:p-12 shadow-sm border border-[#d4cfc3]">
+                    <div class="mb-8 border-l-4 border-[#8b2b2b] pl-4">
+                        <h2 class="text-2xl font-bold tracking-widest">線上徵件計畫：情感的物證</h2>
+                        <p class="text-sm text-[#8b6b6b] mt-1">Collecting Emotional Evidence</p>
+                    </div>
+                    
+                    <div class="prose prose-sm text-[#6b6b6b] leading-relaxed space-y-6">
+                        <p class="text-lg italic text-[#3d3d3d]">「每一件被典當的情緒，都是一段生命的證詞。」</p>
+                        <p>
+                            《十六號當舖》不僅是一個收集故事的容器，更是一場關於「情感轉化」的社會實驗。我們正在為即將到來的<strong>情感物證展覽</strong>進行線上徵件。
+                        </p>
+                        <div class="bg-[#fafafa] p-6 border-l-2 border-[#eee]">
+                            <h4 class="font-bold text-[#3d3d3d] mb-2 flex items-center gap-2">
+                                <i data-lucide="book-open" class="w-4 h-4 text-[#8b2b2b]"></i> 徵件目標
+                            </h4>
+                            <p>我們尋找那些無法被輕易言說、卻沉重如山的瞬間。透過文字、物件描述與情緒重量的量化，我們誠邀你提供一樣和你重要情感緊緊相連的物品，在未來的活動中展出。</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white p-8 border border-[#d4cfc3]">
+                        <h3 class="font-bold mb-4 flex items-center gap-2">
+                            <i data-lucide="info" class="w-4 h-4 text-[#8b2b2b]"></i> 參與方式
+                        </h3>
+                        <ul class="text-sm text-[#6b6b6b] space-y-4 mb-8">
+                            <li class="flex gap-3">
+                                <span class="font-bold text-[#8b2b2b]">01</span>
+                                <span>進入「典當申請」頁面填寫您的情緒故事。</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="font-bold text-[#8b2b2b]">02</span>
+                                <span>勾選「願意分享我的情感觸跡」。</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="font-bold text-[#8b2b2b]">03</span>
+                                <span>您的故事將進入審核池，有機會成為展覽的一部分。</span>
+                            </li>
+                        </ul>
+
+                        <div class="pt-6 border-t border-[#eee]">
+                            <h4 class="font-bold text-sm mb-3 text-[#3d3d3d]">活動詳情：</h4>
+                            <div class="space-y-2 text-sm text-[#6b6b6b]">
+                                <p class="flex items-center gap-2"><i data-lucide="calendar" class="w-3 h-3 text-[#8b2b2b]"></i> 日期：5/3/2026</p>
+                                <p class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3 h-3 text-[#8b2b2b]"></i> 地點：VTC</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-[#3d3d3d] p-8 text-white flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold mb-4">展覽預告</h3>
+                            <p class="text-sm text-gray-300 leading-relaxed">
+                                實體展覽將於 2026 年 3 月展開，屆時將展出由投稿故事轉化而成的「情感標本」。
+                            </p>
+                        </div>
+                        <button onclick="showPage('form')" class="mt-6 w-full py-3 bg-white text-black font-bold text-sm hover:bg-[#F0E68C] transition-colors">
+                            立即前往投稿
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- 底部介紹區塊 (你要求的 Bottom Layer) -->
+        <section class="mt-16 text-center space-y-6">
+            <div class="inline-block h-px w-12 bg-[#8b2b2b] mb-2"></div>
+            <h3 class="text-xl font-bold tracking-widest">關於十六號當舖</h3>
+            <p class="text-[#6b6b6b] leading-relaxed max-w-lg mx-auto text-sm">
+                這是一個關於情感交換的空間。我們相信每一份情緒都有其重量，每一段往事都值得被溫柔對待。 
+                你的投稿將有機會在我們的電台節目中被朗讀，讓聲音傳遞療癒的力量。
+            </p>
+            <div class="flex justify-center gap-4 pt-4">
+                <button onclick="showPage('campaign')" class="text-xs border-b border-[#3d3d3d] pb-1 hover:text-[#8b2b2b] hover:border-[#8b2b2b] transition-colors">
+                    查看過往故事
+                </button>
+                <a href="https://www.instagram.com/wee.works?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="text-xs border-b border-[#3d3d3d] pb-1 hover:text-[#8b2b2b] hover:border-[#8b2b2b] transition-colors flex items-center gap-1">
+                    追蹤 Instagram <i data-lucide="external-link" class="w-3 h-3"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- 頁尾裝飾 -->
+        <div class="mt-12 pt-8 border-t border-[#eee] flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-[#999] tracking-widest uppercase">
+            <div class="flex items-center gap-2">
+                <span>ONLINE EDITION</span>
+                <span class="w-1 h-1 bg-[#ccc] rounded-full"></span>
+                <span>EST. 2024-2026</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span>IG: @wee.works</span>
+                <div class="w-8 h-8 bg-[#3d3d3d] flex items-center justify-center text-white font-bold">當</div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-12 text-center text-[#999] text-xs tracking-widest border-t border-[#d4cfc3] bg-white mt-20">
+        © 2024-2026 十六號當舖 | 小蓮大造 WEE.WORKS
+    </footer>
+
+    <script>
+        // 初始化圖標
+        lucide.createIcons();
+
+        // 頁面切換邏輯
+        function showPage(pageId) {
+            const formPage = document.getElementById('page-form');
+            const campaignPage = document.getElementById('page-campaign');
+            const navForm = document.getElementById('nav-form');
+            const navCampaign = document.getElementById('nav-campaign');
+            const headerTitle = document.getElementById('header-title');
+            const headerSubtitle = document.getElementById('header-subtitle');
+
+            if (pageId === 'form') {
+                formPage.classList.remove('hidden');
+                campaignPage.classList.add('hidden');
+                navForm.classList.add('border-b-2', 'border-[#8b2b2b]', 'text-[#8b2b2b]');
+                navForm.classList.remove('text-[#999]');
+                navCampaign.classList.remove('border-b-2', 'border-[#8b2b2b]', 'text-[#8b2b2b]');
+                navCampaign.classList.add('text-[#999]');
+                headerTitle.innerText = '十六號當舖';
+                headerSubtitle.innerText = '「你的經歷，可能成為另一個個人療癒的起點。」';
+            } else {
+                formPage.classList.add('hidden');
+                campaignPage.classList.remove('hidden');
+                navCampaign.classList.add('border-b-2', 'border-[#8b2b2b]', 'text-[#8b2b2b]');
+                navCampaign.classList.remove('text-[#999]');
+                navForm.classList.remove('border-b-2', 'border-[#8b2b2b]', 'text-[#8b2b2b]');
+                navForm.classList.add('text-[#999]');
+                headerTitle.innerText = '徵件計畫';
+                headerSubtitle.innerText = '「收集情感的碎片，拼湊生命的完整。」';
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
