@@ -70,6 +70,24 @@
             background-color: #8b2b2b;
             color: white;
         }
+
+        /* Responsive Layout Control */
+        .campaign-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .order-1 { order: 1; }
+        .order-2 { order: 2; }
+
+        @media (min-width: 801px) {
+            .campaign-grid {
+                flex-direction: row;
+            }
+            .campaign-grid > div {
+                flex: 1;
+            }
+        }
     </style>
 </head>
 <body class="text-[#3d3d3d] selection:bg-[#8b2b2b] selection:text-white">
@@ -193,7 +211,7 @@
                     </div>
                     <div class="space-y-6">
                         <p class="text-lg leading-relaxed italic text-[#3d3d3d]">
-                            「在十六巷的夜裡，一些情緒沒有地方放，我們就把它們擺上櫃，給它一張當票，讓它獲得形狀。」
+                             「在十六巷的夜裡，一些情緒沒有地方放，我們就把它們擺上櫃，給它一張當票，讓它獲得形狀。」
                         </p>
                         <p class="text-sm text-[#6b6b6b]">
                             本舖不收金銀首飾，只收未安放的心事；押的是情緒，出的是一張當票。等你慢工一回，再以一句話把它贖回。
@@ -274,8 +292,8 @@
                     </div>
                 </section>
 
-                <section class="grid md:grid-cols-2 gap-6">
-                    <div class="bg-paper p-8 border border-[#d4cfc3] flex flex-col">
+                <section class="campaign-grid">
+                    <div class="bg-paper p-8 border border-[#d4cfc3] flex flex-col order-1">
                         <h3 class="font-bold mb-4 flex items-center gap-2">
                             <i data-lucide="info" class="w-4 h-4 text-[#8b2b2b]"></i> 參與方式
                         </h3>
@@ -358,7 +376,7 @@
                             </form>
                         </div>
                     </div>
-                    <div class="bg-[#3d3d3d] p-8 text-white flex flex-col justify-between">
+                    <div class="bg-[#3d3d3d] p-8 text-white flex flex-col justify-between order-2">
                         <div>
                             <h3 class="font-bold mb-4">展覽預告</h3>
                             <p class="text-sm text-gray-300 leading-relaxed">
